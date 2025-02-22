@@ -32,7 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+<<<<<<< HEAD
 .env.local
+=======
+>>>>>>> e4504bb (Initial commit from Create Next App)
 
 # vercel
 .vercel
