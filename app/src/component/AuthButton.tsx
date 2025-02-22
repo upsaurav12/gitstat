@@ -7,10 +7,10 @@ export default function AuthButton() {
 
     if (session) {
         return (
-            <>
-                Welcome {session.user?.name} <br />
-                <button onClick={() => signOut()}>Sign out</button>
-            </>
+            <div className='flex justify-between items-center h-[70px] font-bold text-2xl'>
+                {session.user?.name} <br />
+                <button className='mr-2 text-sm font-light' onClick={() => signOut()}>Sign out</button>
+            </div>
         )
     }
     return (

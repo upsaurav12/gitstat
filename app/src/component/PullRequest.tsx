@@ -1,70 +1,67 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
 
-interface PullRequest {
+interface Event {
     id: number
     title: string
     html_url: string
-    state: string
+    created_at: string
+    updated_at: string
+    payload: {
+        action: string
+        pull_request: {
+            head: {
+                label: string
+                ref: string
+            }
+        }
+    }
+    type: string
+    body: string
 }
-
 const PullRequest = () => {
-    /*
-    const [pullRequest, setPullRequest] = useState<PullRequest[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const { data: session } = useSession();
+    const [events, setEvents] = useState<Event[]>([])
+    const { data: session } = useSession()
 
     useEffect(() => {
-
-        async function fetchPullRequest() {
-            if (!session?.accessToken) return
-            setLoading(true)
-
-
+        const fetchEvents = async () => {
             try {
-                const response = await fetch('https://api.github.com/repos/nextauthjs/next-auth/pulls', {
+                const response = await fetch('https://api.github.com/users/upsaurav12/events', {
                     headers: {
-                        Authorization: `Bearer ${session.accessToken}`,
+                        Authorization: `Bearer ${session?.accessToken}`,
                         Accept: 'application/vnd.github.v3+json',
-                    }
+                    },
                 })
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch pull request')
+                    throw new Error('Failed to fetch events')
                 }
 
                 const data = await response.json()
-                setPullRequest(data)
+                const pullRequest = data.filter((event: Event) => event.type === 'PullRequestEvent')
+                setEvents(pullRequest)
+                console.log(pullRequest)
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'An error occurred')
-            } finally {
-                setLoading(false)
+                console.log(err)
             }
         }
 
-
-        fetchPullRequest()
-
+        fetchEvents()
     }, [session])
-
-    if (!session) {
-        return <div>Please sign in to view your pull request</div>
-    }
-*/
-
-    {/*}
-    if (loading) return <div>Loading pull request...</div>
-
-    if (error) return <div>Error: {error}</div>*/}
     return (
         <div>
-            <h1 className='xl'>Hello</h1>
+            {events.slice(0, 8).map((event) => (
+                <li key={event.id} className="flex items-center justify-between p-4 pb-6 bg-muted rounded-lg mb-2">
+                    <div>
+                        <h3 className="font-semibold">{event.payload.pull_request.head.label}</h3>
+                        <p className="text-sm text-muted-foreground">{event.body}</p>
+                    </div>
+                </li>
+            ))}
         </div>
-    );
+    )
 }
 
-
-export default PullRequest;
+export default PullRequest
