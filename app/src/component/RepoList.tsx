@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useState, useEffect } from 'react'
-import { CardTitle, CardDescription, CardHeader, Card } from '@/components/ui/card'
+import { Card, CardContent, CardTitle, CardDescription, CardHeader } from '../../../components/ui/card'
 
 interface Repository {
     id: number
